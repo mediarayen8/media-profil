@@ -14,8 +14,8 @@ class ProfileSeeder extends Seeder
     {
         // Pastikan ada user (buat user jika belum ada)
         $user = User::firstOrCreate(
-            ['email' => 'admin@example.com'],
-            ['name' => 'Admin', 'password' => bcrypt('password123')]
+            ['email' => 'mediarayen8@gmail.com'],
+            ['name' => 'riyan', 'password' => bcrypt('riyan180203')]
         );
 
         // 1. Data Profil

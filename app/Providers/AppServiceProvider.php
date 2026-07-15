@@ -5,26 +5,25 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\URL; // <-- Tambahkan ini
 use App\Models\Profile;
 
 class AppServiceProvider extends ServiceProvider
 {
-    /**
-     * Register any application services.
-     */
     public function register(): void
     {
         //
     }
 
-    /**
-     * Bootstrap any application services.
-     */
     public function boot(): void
     {
-        // Mengikat data profil ke view layout admin secara otomatis
+        // 1. Memaksa aplikasi menggunakan HTTPS di production
+        if ($this->app->environment('production')) {
+            URL::forceScheme('https');
+        }
+
+        // 2. Mengikat data profil ke view layout admin
         View::composer('layouts.admin', function ($view) {
-            // Kita gunakan Auth::id() agar datanya sesuai dengan user yang sedang login
             $view->with('profile', Profile::where('user_id', Auth::id())->first());
         });
     }

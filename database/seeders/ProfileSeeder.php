@@ -21,27 +21,9 @@ class ProfileSeeder extends Seeder
         // 1. Data Profil
         Profile::create([
             'user_id'   => $user->id, // Gunakan $user->id (lebih aman)
-            'full_name' => 'Nama Anda',
-            'job_title' => 'Fullstack Developer',
+            'full_name' => 'RIYAN MEDIA FEBRIANA',
+            'job_title' => 'Web Developer',
             'bio'       => 'Passionate about building scalable web applications and clean UI/UX.',
-        ]);
-
-        // 2. Data Project
-        Project::create([
-            'user_id'     => $user->id, // Tambahkan ini
-            'title'       => 'SaaS Dashboard',
-            'description' => 'A modern analytics dashboard for tracking user data.',
-            'tech_stack'  => 'Laravel, Tailwind CSS, Alpine.js',
-        ]);
-
-        // 3. Data Experience
-        Experience::create([
-            'user_id'     => $user->id, // Tambahkan ini
-            'company'     => 'Tech Corp',
-            'position'    => 'Frontend Developer',
-            'period'      => '2023 - 2025',
-            'start_date'  => '2023-01-01',
-            'description' => 'Developed responsive user interfaces and improved performance by 30%.',
         ]);
     }
 }

@@ -51,6 +51,7 @@ return new class extends Migration
             $table->id();
             $table->string('company');
             $table->string('position');
+            $table->string('period'); // Atau $table->text('period');
             $table->date('start_date');
             $table->date('end_date')->nullable();
             $table->text('description')->nullable();

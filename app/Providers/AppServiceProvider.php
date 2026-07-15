@@ -16,15 +16,15 @@ class AppServiceProvider extends ServiceProvider
     }
 
     public function boot(): void
-    {
-        // 1. Memaksa aplikasi menggunakan HTTPS di production
-        if ($this->app->environment('production')) {
-            URL::forceScheme('https');
-        }
-
-        // 2. Mengikat data profil ke view layout admin
-        View::composer('layouts.admin', function ($view) {
-            $view->with('profile', Profile::where('user_id', Auth::id())->first());
-        });
+{
+    // Paksa semua URL menjadi HTTPS jika di server production
+    if ($this->app->environment('production')) {
+        \Illuminate\Support\Facades\URL::forceScheme('https');
     }
+
+    // Kode composer Anda tetap di sini...
+    \Illuminate\Support\Facades\View::composer('layouts.admin', function ($view) {
+        $view->with('profile', \App\Models\Profile::where('user_id', \Illuminate\Support\Facades\Auth::id())->first());
+    });
+}
 }

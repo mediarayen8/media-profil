@@ -20,7 +20,7 @@ class ProfileSeeder extends Seeder
 
         // 1. Data Profil
         Profile::create([
-            'user_id'   => $user->id, // Tambahkan ini
+            'user_id'   => 1, // Tambahkan ini
             'full_name' => 'Nama Anda',
             'job_title' => 'Fullstack Developer',
             'bio'       => 'Passionate about building scalable web applications and clean UI/UX.',

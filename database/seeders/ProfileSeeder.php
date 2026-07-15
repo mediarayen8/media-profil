@@ -40,6 +40,7 @@ class ProfileSeeder extends Seeder
             'company'     => 'Tech Corp',
             'position'    => 'Frontend Developer',
             'period'      => '2023 - 2025',
+            'start_date'  => '2023-01-01',
             'description' => 'Developed responsive user interfaces and improved performance by 30%.',
         ]);
     }

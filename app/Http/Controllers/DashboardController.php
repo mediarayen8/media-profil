@@ -8,30 +8,19 @@ use Illuminate\Support\Facades\Auth;
 
 class DashboardController extends Controller
 {
-    public function index()
-    {
-        $userId = Auth::id();
+    // App\Http\Controllers\Admin\DashboardController.php
+public function index()
+{
+    $user = auth()->user()->load(['profile', 'skills', 'projects', 'experiences', 'educations']);
 
-        $profile = Profile::firstOrCreate(
-            ['user_id' => $userId],
-            ['full_name' => Auth::user()->name]
-        );
-
-        $projects = Project::where('user_id', $userId)->get();
-        $skills = Skill::where('user_id', $userId)->get();
-        $experiences = Experience::where('user_id', $userId)->get();
-        
-        $projectsCount = $projects->count();
-        $avgSkill = $skills->avg('proficiency') ?? 0;
-
-        // PASTIKAN variabel 'unreadMessages' atau 'Contact::' tidak lagi dipanggil di sini
-        return view('admin.dashboard', compact(
-            'profile', 
-            'projectsCount', 
-            'skills', 
-            'experiences', 
-            'projects', 
-            'avgSkill'
-        ));
-    }
+    return view('admin.dashboard', [
+        'user'          => $user,
+        'projects'      => $user->projects,
+        'projectsCount' => $user->projects->count(),
+        'skills'        => $user->skills,
+        'experiences'   => $user->experiences,
+        'educations'    => $user->educations,
+        'avgSkill'      => $user->skills->avg('proficiency') ?? 0,
+    ]);
+}
 }

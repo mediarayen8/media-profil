@@ -1,102 +1,124 @@
 @extends('layouts.admin')
 
 @section('content')
-<div class="grid grid-cols-12 gap-6 p-2">
+<div class="p-8 max-w-7xl mx-auto space-y-8">
     
-    <div class="col-span-12 xl:col-span-4 space-y-6">
-        <div class="bg-slate-900 rounded-3xl border border-slate-800 p-6 shadow-2xl relative">
-            <div class="h-32 bg-gradient-to-r from-purple-600 to-indigo-600 rounded-2xl mb-12"></div>
-            
-            <div class="w-24 h-24 bg-slate-800 rounded-2xl border-4 border-slate-950 absolute top-20 left-10 shadow-xl overflow-hidden flex items-center justify-center z-[999]" 
-     style="background-image: url('{{ asset('storage/' . $profile->photo_path) }}'); background-size: cover; background-position: center;">
-    
-    @if(isset($profile) && $profile->photo_path)
-        <img src="{{ asset('storage/' . $profile->photo_path) }}" 
-             class="w-full h-full object-cover" 
-             style="display: block !important; visibility: visible !important;"
-             alt="Profile">
-    @else
-        <span class="text-slate-500 font-bold text-2xl uppercase">ra</span>
-    @endif
-</div>
-            
-            <div class="mt-4">
-                <h2 class="text-2xl font-bold text-white">
-    {{ isset($profile) ? $profile->full_name : auth()->user()->name }}
-</h2>
-                <p class="text-purple-400 text-sm font-medium">{{ isset($profile) ? $profile->job_title : 'Developer' }}</p>
-            </div>
-
-            <div class="mt-6">
-                <p class="text-[10px] text-slate-500 uppercase tracking-widest font-bold mb-3">Skills</p>
-                <div class="flex flex-wrap gap-2">
-                    @forelse($skills as $skill)
-                        <span class="bg-slate-800 border border-slate-700 px-3 py-1 rounded-lg text-xs text-slate-300">{{ $skill->name }}</span>
-                    @empty
-                        <p class="text-slate-600 text-xs italic">Belum ada skill.</p>
-                    @endforelse
-                </div>
-            </div>
+    <div class="flex flex-col md:flex-row justify-between items-start gap-4">
+        <div>
+            <h1 class="text-3xl font-extrabold text-white">Dashboard</h1>
+            <p class="text-slate-400">Selamat datang di pusat kendali portofolio Anda.</p>
         </div>
-
-        <div class="bg-slate-900 rounded-3xl border border-slate-800 p-6">
-            <h3 class="font-bold text-white mb-4">Latest Experiences</h3>
-            <div class="space-y-4">
-                @forelse($experiences as $exp)
-                <div class="flex items-center gap-4 group">
-                    <div class="w-10 h-10 bg-slate-800 rounded-xl flex items-center justify-center border border-slate-700 group-hover:border-purple-500 transition">🚀</div>
-                    <div>
-                        <p class="text-sm font-bold text-white">{{ $exp->position }}</p>
-                        <p class="text-xs text-slate-500">{{ $exp->company }}</p>
-                    </div>
-                </div>
-                @empty
-                    <p class="text-slate-600 text-xs italic">Belum ada riwayat pekerjaan.</p>
-                @endforelse
-            </div>
+        <div class="flex gap-3">
+            <a href="{{ route('profile.public', ['name' => str_replace(' ', '-', auth()->user()->name)]) }}" 
+   target="_blank" 
+   class="px-5 py-3 bg-slate-800 hover:bg-slate-700 text-white rounded-2xl font-bold transition flex items-center gap-2">
+    <i class="fas fa-external-link-alt text-sm"></i> Lihat Website
+</a>
+            <a href="{{ route('admin.projects.create') }}" class="px-5 py-3 bg-purple-600 hover:bg-purple-500 text-white rounded-2xl font-bold transition flex items-center gap-2">
+                <i class="fas fa-plus"></i> Tambah Proyek
+            </a>
         </div>
     </div>
 
-    <div class="col-span-12 xl:col-span-8 space-y-6">
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+        @php 
+            $stats = [
+                ['Proyek', $projectsCount, 'text-purple-400', 'fa-briefcase'],
+                ['Keahlian', $skills->count(), 'text-blue-400', 'fa-microchip'],
+                ['Pengalaman', $experiences->count(), 'text-emerald-400', 'fa-history'],
+                ['Pendidikan', $educations->count(), 'text-orange-400', 'fa-user-graduate']
+            ];
+        @endphp
+        @foreach($stats as $stat)
+        <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 hover:border-slate-700 transition-all flex items-center gap-5">
+            <div class="w-14 h-14 bg-slate-950 rounded-2xl flex items-center justify-center text-xl {{ $stat[2] }}">
+                <i class="fas {{ $stat[3] }}"></i>
+            </div>
+            <div>
+                <p class="text-2xl font-bold text-white">{{ $stat[1] }}</p>
+                <p class="text-slate-500 text-xs uppercase tracking-wider font-semibold">{{ $stat[0] }}</p>
+            </div>
+        </div>
+        @endforeach
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
         
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 hover:border-slate-700 transition">
-                <p class="text-3xl font-bold text-white">{{ $projectsCount }}</p>
-                <p class="text-slate-500 text-sm">Total Projects</p>
+        <div class="lg:col-span-2 bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden">
+            <div class="p-6 border-b border-slate-800 flex justify-between items-center">
+                <h3 class="font-bold text-white flex items-center gap-2">
+                    <i class="fas fa-list-ul text-purple-400"></i> Proyek Terbaru
+                </h3>
             </div>
-            <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800 hover:border-slate-700 transition">
-                <p class="text-3xl font-bold text-white">{{ $skills->count() }}</p>
-                <p class="text-slate-500 text-sm">Skills Set</p>
-            </div>
-        </div>
-
-        <div class="bg-slate-900 p-8 rounded-3xl border border-slate-800">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="font-bold text-white">Aspect Score</h3>
-                <span class="text-purple-400 font-bold text-2xl">{{ number_format($avgSkill, 1) }}%</span>
-            </div>
-            <div class="w-full h-3 bg-slate-800 rounded-full overflow-hidden">
-                <div class="h-full bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full" style="width: {{ $avgSkill }}%"></div>
-            </div>
-        </div>
-
-        <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800">
-            <div class="flex justify-between items-center mb-6">
-                <h3 class="font-bold text-white">My Projects</h3>
-                <a href="{{ route('admin.projects.index') }}" class="text-xs text-purple-400 hover:text-white transition">View All</a>
-            </div>
-            <div class="space-y-3">
-                @forelse($projects->take(3) as $project)
-                <div class="flex justify-between items-center p-4 border border-slate-800 rounded-2xl hover:bg-slate-800 transition">
-                    <span class="font-medium text-slate-200">{{ $project->title }}</span>
-                    <span class="text-[10px] uppercase font-bold px-3 py-1 rounded-full {{ $project->is_published ? 'bg-emerald-900/30 text-emerald-400' : 'bg-slate-700 text-slate-400' }}">
+            <div class="divide-y divide-slate-800">
+                @forelse($projects->take(5) as $project)
+                <div class="p-6 flex justify-between items-center hover:bg-slate-800/30 transition">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 bg-slate-950 rounded-lg flex items-center justify-center text-slate-500">
+                            <i class="fas fa-folder-open"></i>
+                        </div>
+                        <div>
+                            <p class="font-bold text-white">{{ $project->title }}</p>
+                            <p class="text-xs text-slate-500">{{ $project->created_at->format('d M Y') }}</p>
+                        </div>
+                    </div>
+                    <span class="px-3 py-1 text-[10px] uppercase font-bold rounded-full {{ $project->is_published ? 'bg-emerald-900/30 text-emerald-400' : 'bg-slate-700 text-slate-400' }}">
                         {{ $project->is_published ? 'Published' : 'Draft' }}
                     </span>
                 </div>
                 @empty
-                    <p class="text-slate-600 text-sm italic">Belum ada proyek yang dibuat.</p>
+                <div class="p-8 text-center text-slate-500 italic">Belum ada proyek.</div>
                 @endforelse
             </div>
+        </div>
+
+        <div class="space-y-6">
+            <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800">
+                <h3 class="font-bold text-white mb-4 flex items-center gap-2">
+                    <i class="fas fa-chart-line text-purple-400"></i> Performance Score
+                </h3>
+                <div class="text-3xl font-extrabold text-white mb-2">{{ number_format($avgSkill, 1) }}%</div>
+                <div class="h-2 w-full bg-slate-800 rounded-full overflow-hidden">
+                    <div class="h-full bg-gradient-to-r from-purple-500 to-blue-500" style="width: {{ $avgSkill }}%"></div>
+                </div>
+            </div>
+
+            <div class="bg-slate-900 p-6 rounded-3xl border border-slate-800">
+    <h3 class="font-bold text-white mb-4 flex items-center gap-2">
+        <i class="fas fa-compass text-purple-400"></i> Quick Access
+    </h3>
+    <div class="grid grid-cols-2 gap-3">
+        <a href="{{ route('admin.profile.edit') }}" class="flex flex-col items-center justify-center p-4 bg-slate-800 rounded-2xl hover:bg-purple-900/30 hover:border-purple-500 border border-transparent transition group">
+            <i class="fas fa-user-edit text-slate-400 group-hover:text-purple-400 mb-2"></i>
+            <span class="text-[11px] font-bold uppercase text-slate-300">Profil</span>
+        </a>
+
+        <a href="{{ route('admin.projects.index') }}" class="flex flex-col items-center justify-center p-4 bg-slate-800 rounded-2xl hover:bg-purple-900/30 hover:border-purple-500 border border-transparent transition group">
+            <i class="fas fa-folder-open text-slate-400 group-hover:text-purple-400 mb-2"></i>
+            <span class="text-[11px] font-bold uppercase text-slate-300">Proyek</span>
+        </a>
+
+        <a href="{{ route('admin.skills.index') }}" class="flex flex-col items-center justify-center p-4 bg-slate-800 rounded-2xl hover:bg-purple-900/30 hover:border-purple-500 border border-transparent transition group">
+            <i class="fas fa-tools text-slate-400 group-hover:text-purple-400 mb-2"></i>
+            <span class="text-[11px] font-bold uppercase text-slate-300">Skill</span>
+        </a>
+
+        <a href="{{ route('admin.experiences.index') }}" class="flex flex-col items-center justify-center p-4 bg-slate-800 rounded-2xl hover:bg-purple-900/30 hover:border-purple-500 border border-transparent transition group">
+            <i class="fas fa-history text-slate-400 group-hover:text-purple-400 mb-2"></i>
+            <span class="text-[11px] font-bold uppercase text-slate-300">Exp</span>
+        </a>
+
+        <a href="{{ route('admin.educations.index') }}" class="flex flex-col items-center justify-center p-4 bg-slate-800 rounded-2xl hover:bg-purple-900/30 hover:border-purple-500 border border-transparent transition group">
+            <i class="fas fa-graduation-cap text-slate-400 group-hover:text-purple-400 mb-2"></i>
+            <span class="text-[11px] font-bold uppercase text-slate-300">Edu</span>
+        </a>
+
+        <a href="{{ route('admin.profile.edit') }}" class="flex flex-col items-center justify-center p-4 bg-slate-800 rounded-2xl hover:bg-purple-900/30 hover:border-purple-500 border border-transparent transition group">
+            <i class="fas fa-cog text-slate-400 group-hover:text-purple-400 mb-2"></i>
+            <span class="text-[11px] font-bold uppercase text-slate-300">Akun</span>
+        </a>
+    </div>
+</div>
         </div>
     </div>
 </div>
